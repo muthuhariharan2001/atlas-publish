@@ -5,7 +5,7 @@ import { Footer } from "@/components/Footer";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { BookOpen, Calendar, User } from "lucide-react";
 
@@ -46,7 +46,7 @@ const PublisherBooks = () => {
       const { data, error } = await supabase
         .from("books")
         .select("*")
-        .eq("publisher", publisherName)
+        .eq("publisher", publisherName as any)
         .order("created_at", { ascending: false });
 
       if (error) throw error;

@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { User } from "@supabase/supabase-js";
 
@@ -55,7 +55,7 @@ const UploadBook = () => {
           user_id: user.id,
           title: formData.title,
           author: formData.author,
-          publisher: formData.publisher,
+          publisher: formData.publisher as any,
           isbn: formData.isbn || null,
           description: formData.description || null,
           publication_year: formData.publication_year ? parseInt(formData.publication_year) : null,
