@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard";
 import UploadBook from "./pages/UploadBook";
 import UploadJournal from "./pages/UploadJournal";
 import UploadDataset from "./pages/UploadDataset";
+import Publishers from "./pages/Publishers";
 import PublisherBooks from "./pages/PublisherBooks";
 import NotFound from "./pages/NotFound";
 
@@ -27,6 +28,7 @@ const App = () => (
           <Route path="/upload/book" element={<UploadBook />} />
           <Route path="/upload/journal" element={<UploadJournal />} />
           <Route path="/upload/dataset" element={<UploadDataset />} />
+          <Route path="/publishers" element={<Publishers />} />
           <Route path="/books/:publisher" element={<PublisherBooks />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

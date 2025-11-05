@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { User } from "@supabase/supabase-js";
@@ -23,6 +24,10 @@ const UploadDataset = () => {
     size_mb: "",
     keywords: "",
     license: "",
+    version: "",
+    access_level: "Public",
+    doi: "",
+    citation: "",
   });
 
   useEffect(() => {
@@ -54,6 +59,10 @@ const UploadDataset = () => {
           size_mb: formData.size_mb ? parseFloat(formData.size_mb) : null,
           keywords: keywordsArray.length > 0 ? keywordsArray : null,
           license: formData.license || null,
+          version: formData.version || null,
+          access_level: formData.access_level || "Public",
+          doi: formData.doi || null,
+          citation: formData.citation || null,
         },
       ]);
 
@@ -165,6 +174,51 @@ const UploadDataset = () => {
                     value={formData.license}
                     onChange={(e) => handleChange("license", e.target.value)}
                     placeholder="CC BY 4.0, MIT, etc."
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="version">Version</Label>
+                  <Input
+                    id="version"
+                    value={formData.version}
+                    onChange={(e) => handleChange("version", e.target.value)}
+                    placeholder="1.0, 2.1, etc."
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="access_level">Access Level</Label>
+                  <Select value={formData.access_level} onValueChange={(value) => handleChange("access_level", value)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select access level" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Public">Public</SelectItem>
+                      <SelectItem value="Restricted">Restricted</SelectItem>
+                      <SelectItem value="Private">Private</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="doi">DOI (Digital Object Identifier)</Label>
+                  <Input
+                    id="doi"
+                    value={formData.doi}
+                    onChange={(e) => handleChange("doi", e.target.value)}
+                    placeholder="10.1234/example.doi"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="citation">Citation</Label>
+                  <Textarea
+                    id="citation"
+                    value={formData.citation}
+                    onChange={(e) => handleChange("citation", e.target.value)}
+                    placeholder="Recommended citation for this dataset"
+                    rows={3}
                   />
                 </div>
 

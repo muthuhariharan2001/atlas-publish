@@ -37,7 +37,7 @@ export const Navbar = () => {
         </Link>
 
         <div className="flex items-center gap-6">
-          <Link to="/books/oxford-university-press" className="text-foreground hover:text-primary transition-colors">
+          <Link to="/publishers" className="text-foreground hover:text-primary transition-colors">
             Publishers
           </Link>
           {user ? (

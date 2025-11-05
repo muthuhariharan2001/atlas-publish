@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { User } from "@supabase/supabase-js";
@@ -25,6 +26,10 @@ const UploadJournal = () => {
     doi: "",
     abstract: "",
     publication_date: "",
+    keywords_list: "",
+    citations_count: "",
+    impact_factor: "",
+    category: "",
   });
 
   useEffect(() => {
@@ -58,6 +63,10 @@ const UploadJournal = () => {
           doi: formData.doi || null,
           abstract: formData.abstract || null,
           publication_date: formData.publication_date || null,
+          keywords_list: formData.keywords_list ? formData.keywords_list.split(",").map((k) => k.trim()) : null,
+          citations_count: formData.citations_count ? parseInt(formData.citations_count) : 0,
+          impact_factor: formData.impact_factor ? parseFloat(formData.impact_factor) : null,
+          category: formData.category || null,
         },
       ]);
 
@@ -177,6 +186,62 @@ const UploadJournal = () => {
                     value={formData.publication_date}
                     onChange={(e) => handleChange("publication_date", e.target.value)}
                   />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="keywords_list">Keywords (comma-separated)</Label>
+                  <Input
+                    id="keywords_list"
+                    value={formData.keywords_list}
+                    onChange={(e) => handleChange("keywords_list", e.target.value)}
+                    placeholder="machine learning, artificial intelligence, deep learning"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="citations_count">Citations Count</Label>
+                    <Input
+                      id="citations_count"
+                      type="number"
+                      min="0"
+                      value={formData.citations_count}
+                      onChange={(e) => handleChange("citations_count", e.target.value)}
+                      placeholder="0"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="impact_factor">Impact Factor</Label>
+                    <Input
+                      id="impact_factor"
+                      type="number"
+                      step="0.001"
+                      min="0"
+                      value={formData.impact_factor}
+                      onChange={(e) => handleChange("impact_factor", e.target.value)}
+                      placeholder="3.456"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="category">Category</Label>
+                  <Select value={formData.category} onValueChange={(value) => handleChange("category", value)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Science & Technology">Science & Technology</SelectItem>
+                      <SelectItem value="Medicine & Healthcare">Medicine & Healthcare</SelectItem>
+                      <SelectItem value="Engineering">Engineering</SelectItem>
+                      <SelectItem value="Social Sciences">Social Sciences</SelectItem>
+                      <SelectItem value="Humanities">Humanities</SelectItem>
+                      <SelectItem value="Business & Economics">Business & Economics</SelectItem>
+                      <SelectItem value="Law">Law</SelectItem>
+                      <SelectItem value="Education">Education</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 <div className="space-y-2">

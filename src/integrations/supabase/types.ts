@@ -17,10 +17,15 @@ export type Database = {
       books: {
         Row: {
           author: string
+          category: string | null
+          cover_image_url: string | null
           created_at: string | null
           description: string | null
+          edition: string | null
           id: string
           isbn: string | null
+          language: string | null
+          page_count: number | null
           publication_year: number | null
           publisher: Database["public"]["Enums"]["book_publisher"]
           title: string
@@ -29,10 +34,15 @@ export type Database = {
         }
         Insert: {
           author: string
+          category?: string | null
+          cover_image_url?: string | null
           created_at?: string | null
           description?: string | null
+          edition?: string | null
           id?: string
           isbn?: string | null
+          language?: string | null
+          page_count?: number | null
           publication_year?: number | null
           publisher: Database["public"]["Enums"]["book_publisher"]
           title: string
@@ -41,10 +51,15 @@ export type Database = {
         }
         Update: {
           author?: string
+          category?: string | null
+          cover_image_url?: string | null
           created_at?: string | null
           description?: string | null
+          edition?: string | null
           id?: string
           isbn?: string | null
+          language?: string | null
+          page_count?: number | null
           publication_year?: number | null
           publisher?: Database["public"]["Enums"]["book_publisher"]
           title?: string
@@ -55,9 +70,12 @@ export type Database = {
       }
       datasets: {
         Row: {
+          access_level: string | null
+          citation: string | null
           created_at: string | null
           data_type: string | null
           description: string
+          doi: string | null
           file_format: string | null
           id: string
           keywords: string[] | null
@@ -66,11 +84,15 @@ export type Database = {
           title: string
           updated_at: string | null
           user_id: string
+          version: string | null
         }
         Insert: {
+          access_level?: string | null
+          citation?: string | null
           created_at?: string | null
           data_type?: string | null
           description: string
+          doi?: string | null
           file_format?: string | null
           id?: string
           keywords?: string[] | null
@@ -79,11 +101,15 @@ export type Database = {
           title: string
           updated_at?: string | null
           user_id: string
+          version?: string | null
         }
         Update: {
+          access_level?: string | null
+          citation?: string | null
           created_at?: string | null
           data_type?: string | null
           description?: string
+          doi?: string | null
           file_format?: string | null
           id?: string
           keywords?: string[] | null
@@ -92,6 +118,7 @@ export type Database = {
           title?: string
           updated_at?: string | null
           user_id?: string
+          version?: string | null
         }
         Relationships: []
       }
@@ -99,11 +126,15 @@ export type Database = {
         Row: {
           abstract: string | null
           authors: string[]
+          category: string | null
+          citations_count: number | null
           created_at: string | null
           doi: string | null
           id: string
+          impact_factor: number | null
           issue: string | null
           journal_name: string
+          keywords_list: string[] | null
           pages: string | null
           publication_date: string | null
           title: string
@@ -114,11 +145,15 @@ export type Database = {
         Insert: {
           abstract?: string | null
           authors: string[]
+          category?: string | null
+          citations_count?: number | null
           created_at?: string | null
           doi?: string | null
           id?: string
+          impact_factor?: number | null
           issue?: string | null
           journal_name: string
+          keywords_list?: string[] | null
           pages?: string | null
           publication_date?: string | null
           title: string
@@ -129,11 +164,15 @@ export type Database = {
         Update: {
           abstract?: string | null
           authors?: string[]
+          category?: string | null
+          citations_count?: number | null
           created_at?: string | null
           doi?: string | null
           id?: string
+          impact_factor?: number | null
           issue?: string | null
           journal_name?: string
+          keywords_list?: string[] | null
           pages?: string | null
           publication_date?: string | null
           title?: string

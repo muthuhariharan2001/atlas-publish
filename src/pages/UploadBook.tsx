@@ -31,6 +31,10 @@ const UploadBook = () => {
     isbn: "",
     description: "",
     publication_year: "",
+    edition: "",
+    language: "English",
+    page_count: "",
+    category: "",
   });
 
   useEffect(() => {
@@ -59,6 +63,10 @@ const UploadBook = () => {
           isbn: formData.isbn || null,
           description: formData.description || null,
           publication_year: formData.publication_year ? parseInt(formData.publication_year) : null,
+          edition: formData.edition || null,
+          language: formData.language || "English",
+          page_count: formData.page_count ? parseInt(formData.page_count) : null,
+          category: formData.category || null,
         },
       ]);
 
@@ -154,6 +162,57 @@ const UploadBook = () => {
                     onChange={(e) => handleChange("publication_year", e.target.value)}
                     placeholder="2025"
                   />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="edition">Edition</Label>
+                  <Input
+                    id="edition"
+                    value={formData.edition}
+                    onChange={(e) => handleChange("edition", e.target.value)}
+                    placeholder="1st Edition, 2nd Edition, etc."
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="language">Language</Label>
+                  <Input
+                    id="language"
+                    value={formData.language}
+                    onChange={(e) => handleChange("language", e.target.value)}
+                    placeholder="English"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="page_count">Page Count</Label>
+                  <Input
+                    id="page_count"
+                    type="number"
+                    min="1"
+                    value={formData.page_count}
+                    onChange={(e) => handleChange("page_count", e.target.value)}
+                    placeholder="350"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="category">Category</Label>
+                  <Select value={formData.category} onValueChange={(value) => handleChange("category", value)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Science & Technology">Science & Technology</SelectItem>
+                      <SelectItem value="Medicine & Healthcare">Medicine & Healthcare</SelectItem>
+                      <SelectItem value="Engineering">Engineering</SelectItem>
+                      <SelectItem value="Social Sciences">Social Sciences</SelectItem>
+                      <SelectItem value="Humanities">Humanities</SelectItem>
+                      <SelectItem value="Business & Economics">Business & Economics</SelectItem>
+                      <SelectItem value="Law">Law</SelectItem>
+                      <SelectItem value="Education">Education</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 <div className="space-y-2">
