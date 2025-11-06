@@ -22,6 +22,7 @@ export default {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          glow: "hsl(var(--primary-glow))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -56,6 +57,26 @@ export default {
           "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
+        },
+        oxford: {
+          DEFAULT: "hsl(var(--oxford))",
+          dark: "hsl(var(--oxford-dark))",
+        },
+        cambridge: {
+          DEFAULT: "hsl(var(--cambridge))",
+          dark: "hsl(var(--cambridge-dark))",
+        },
+        springer: {
+          DEFAULT: "hsl(var(--springer))",
+          dark: "hsl(var(--springer-dark))",
+        },
+        elsevier: {
+          DEFAULT: "hsl(var(--elsevier))",
+          dark: "hsl(var(--elsevier-dark))",
+        },
+        wiley: {
+          DEFAULT: "hsl(var(--wiley))",
+          dark: "hsl(var(--wiley-dark))",
         },
       },
       borderRadius: {

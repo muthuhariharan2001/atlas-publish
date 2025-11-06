@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ImageUpload } from "@/components/ImageUpload";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { User } from "@supabase/supabase-js";
@@ -16,6 +17,8 @@ const UploadDataset = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
+  const [thumbnail, setThumbnail] = useState<File | null>(null);
+  const [datasetFile, setDatasetFile] = useState<File | null>(null);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -28,6 +31,7 @@ const UploadDataset = () => {
     access_level: "Public",
     doi: "",
     citation: "",
+    contributor_name: "",
   });
 
   useEffect(() => {
@@ -49,6 +53,43 @@ const UploadDataset = () => {
 
       const keywordsArray = formData.keywords.split(",").map((k) => k.trim());
 
+      let thumbnailUrl = null;
+      let datasetUrl = null;
+
+      // Upload thumbnail if provided
+      if (thumbnail) {
+        const fileExt = thumbnail.name.split('.').pop();
+        const fileName = `${user.id}-${Date.now()}-dataset.${fileExt}`;
+        const { error: uploadError } = await supabase.storage
+          .from('thumbnails')
+          .upload(fileName, thumbnail);
+
+        if (uploadError) throw uploadError;
+        
+        const { data: { publicUrl } } = supabase.storage
+          .from('thumbnails')
+          .getPublicUrl(fileName);
+        
+        thumbnailUrl = publicUrl;
+      }
+
+      // Upload dataset file if provided
+      if (datasetFile) {
+        const fileExt = datasetFile.name.split('.').pop();
+        const fileName = `${user.id}-${Date.now()}.${fileExt}`;
+        const { error: uploadError } = await supabase.storage
+          .from('dataset-files')
+          .upload(fileName, datasetFile);
+
+        if (uploadError) throw uploadError;
+        
+        const { data: { publicUrl } } = supabase.storage
+          .from('dataset-files')
+          .getPublicUrl(fileName);
+        
+        datasetUrl = publicUrl;
+      }
+
       const { error } = await supabase.from("datasets").insert([
         {
           user_id: user.id,
@@ -63,6 +104,9 @@ const UploadDataset = () => {
           access_level: formData.access_level || "Public",
           doi: formData.doi || null,
           citation: formData.citation || null,
+          thumbnail_url: thumbnailUrl,
+          dataset_url: datasetUrl,
+          contributor_name: formData.contributor_name || null,
         },
       ]);
 
@@ -99,6 +143,24 @@ const UploadDataset = () => {
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-6">
+                <ImageUpload
+                  label="Thumbnail Image"
+                  onFileSelect={setThumbnail}
+                  maxSize={2}
+                />
+
+                <div className="space-y-2">
+                  <Label>Dataset File</Label>
+                  <Input
+                    type="file"
+                    onChange={(e) => setDatasetFile(e.target.files?.[0] || null)}
+                    accept=".csv,.json,.xlsx,.hdf5,.zip"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Accepted formats: CSV, JSON, XLSX, HDF5, ZIP (max 100MB)
+                  </p>
+                </div>
+
                 <div className="space-y-2">
                   <Label htmlFor="title">Dataset Title *</Label>
                   <Input
@@ -219,6 +281,16 @@ const UploadDataset = () => {
                     onChange={(e) => handleChange("citation", e.target.value)}
                     placeholder="Recommended citation for this dataset"
                     rows={3}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="contributor_name">Contributor Name</Label>
+                  <Input
+                    id="contributor_name"
+                    value={formData.contributor_name}
+                    onChange={(e) => handleChange("contributor_name", e.target.value)}
+                    placeholder="Name of the dataset contributor"
                   />
                 </div>
 

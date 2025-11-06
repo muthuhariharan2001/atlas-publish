@@ -8,6 +8,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { ImageUpload } from "@/components/ImageUpload";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { User } from "@supabase/supabase-js";
@@ -16,6 +18,9 @@ const UploadJournal = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
+  const [thumbnail, setThumbnail] = useState<File | null>(null);
+  const [openAccess, setOpenAccess] = useState(false);
+  const [peerReviewed, setPeerReviewed] = useState(true);
   const [formData, setFormData] = useState({
     title: "",
     authors: "",
@@ -51,6 +56,25 @@ const UploadJournal = () => {
 
       const authorsArray = formData.authors.split(",").map((a) => a.trim());
 
+      let thumbnailUrl = null;
+
+      // Upload thumbnail if provided
+      if (thumbnail) {
+        const fileExt = thumbnail.name.split('.').pop();
+        const fileName = `${user.id}-${Date.now()}-journal.${fileExt}`;
+        const { error: uploadError } = await supabase.storage
+          .from('thumbnails')
+          .upload(fileName, thumbnail);
+
+        if (uploadError) throw uploadError;
+        
+        const { data: { publicUrl } } = supabase.storage
+          .from('thumbnails')
+          .getPublicUrl(fileName);
+        
+        thumbnailUrl = publicUrl;
+      }
+
       const { error } = await supabase.from("journals").insert([
         {
           user_id: user.id,
@@ -67,6 +91,9 @@ const UploadJournal = () => {
           citations_count: formData.citations_count ? parseInt(formData.citations_count) : 0,
           impact_factor: formData.impact_factor ? parseFloat(formData.impact_factor) : null,
           category: formData.category || null,
+          thumbnail_url: thumbnailUrl,
+          open_access: openAccess,
+          peer_reviewed: peerReviewed,
         },
       ]);
 
@@ -103,6 +130,12 @@ const UploadJournal = () => {
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-6">
+                <ImageUpload
+                  label="Thumbnail Image"
+                  onFileSelect={setThumbnail}
+                  maxSize={2}
+                />
+
                 <div className="space-y-2">
                   <Label htmlFor="title">Article Title *</Label>
                   <Input
@@ -242,6 +275,26 @@ const UploadJournal = () => {
                       <SelectItem value="Education">Education</SelectItem>
                     </SelectContent>
                   </Select>
+                </div>
+
+                <div className="flex items-center space-x-6">
+                  <div className="flex items-center space-x-2">
+                    <Checkbox 
+                      id="open_access" 
+                      checked={openAccess}
+                      onCheckedChange={(checked) => setOpenAccess(checked as boolean)}
+                    />
+                    <Label htmlFor="open_access" className="cursor-pointer">Open Access</Label>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <Checkbox 
+                      id="peer_reviewed" 
+                      checked={peerReviewed}
+                      onCheckedChange={(checked) => setPeerReviewed(checked as boolean)}
+                    />
+                    <Label htmlFor="peer_reviewed" className="cursor-pointer">Peer Reviewed</Label>
+                  </div>
                 </div>
 
                 <div className="space-y-2">

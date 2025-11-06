@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ImageUpload } from "@/components/ImageUpload";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { User } from "@supabase/supabase-js";
@@ -24,6 +25,8 @@ const UploadBook = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
+  const [coverImage, setCoverImage] = useState<File | null>(null);
+  const [thumbnail, setThumbnail] = useState<File | null>(null);
   const [formData, setFormData] = useState({
     title: "",
     author: "",
@@ -35,6 +38,8 @@ const UploadBook = () => {
     language: "English",
     page_count: "",
     category: "",
+    price: "",
+    subject_area: "",
   });
 
   useEffect(() => {
@@ -54,6 +59,43 @@ const UploadBook = () => {
     try {
       if (!user) throw new Error("Not authenticated");
 
+      let coverImageUrl = null;
+      let thumbnailUrl = null;
+
+      // Upload cover image if provided
+      if (coverImage) {
+        const fileExt = coverImage.name.split('.').pop();
+        const fileName = `${user.id}-${Date.now()}-cover.${fileExt}`;
+        const { error: uploadError, data } = await supabase.storage
+          .from('book-covers')
+          .upload(fileName, coverImage);
+
+        if (uploadError) throw uploadError;
+        
+        const { data: { publicUrl } } = supabase.storage
+          .from('book-covers')
+          .getPublicUrl(fileName);
+        
+        coverImageUrl = publicUrl;
+      }
+
+      // Upload thumbnail if provided
+      if (thumbnail) {
+        const fileExt = thumbnail.name.split('.').pop();
+        const fileName = `${user.id}-${Date.now()}-thumb.${fileExt}`;
+        const { error: uploadError } = await supabase.storage
+          .from('thumbnails')
+          .upload(fileName, thumbnail);
+
+        if (uploadError) throw uploadError;
+        
+        const { data: { publicUrl } } = supabase.storage
+          .from('thumbnails')
+          .getPublicUrl(fileName);
+        
+        thumbnailUrl = publicUrl;
+      }
+
       const { error } = await supabase.from("books").insert([
         {
           user_id: user.id,
@@ -67,6 +109,10 @@ const UploadBook = () => {
           language: formData.language || "English",
           page_count: formData.page_count ? parseInt(formData.page_count) : null,
           category: formData.category || null,
+          price: formData.price ? parseFloat(formData.price) : null,
+          subject_area: formData.subject_area || null,
+          cover_image_url: coverImageUrl,
+          thumbnail_url: thumbnailUrl,
         },
       ]);
 
@@ -103,6 +149,18 @@ const UploadBook = () => {
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-6">
+                <ImageUpload
+                  label="Cover Image"
+                  onFileSelect={setCoverImage}
+                  maxSize={5}
+                />
+
+                <ImageUpload
+                  label="Thumbnail"
+                  onFileSelect={setThumbnail}
+                  maxSize={2}
+                />
+
                 <div className="space-y-2">
                   <Label htmlFor="title">Title *</Label>
                   <Input
@@ -213,6 +271,31 @@ const UploadBook = () => {
                       <SelectItem value="Education">Education</SelectItem>
                     </SelectContent>
                   </Select>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="price">Price (USD)</Label>
+                    <Input
+                      id="price"
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      value={formData.price}
+                      onChange={(e) => handleChange("price", e.target.value)}
+                      placeholder="29.99"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="subject_area">Subject Area</Label>
+                    <Input
+                      id="subject_area"
+                      value={formData.subject_area}
+                      onChange={(e) => handleChange("subject_area", e.target.value)}
+                      placeholder="e.g., Computer Science"
+                    />
+                  </div>
                 </div>
 
                 <div className="space-y-2">
