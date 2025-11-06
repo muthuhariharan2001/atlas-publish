@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { BookOpen, Calendar, User } from "lucide-react";
+import { BookOpen, Calendar, User, Search } from "lucide-react";
 
 interface Book {
   id: string;
@@ -17,6 +19,9 @@ interface Book {
   isbn: string | null;
   description: string | null;
   publication_year: number | null;
+  category: string | null;
+  cover_image_url: string | null;
+  thumbnail_url: string | null;
   created_at: string;
 }
 
@@ -31,13 +36,20 @@ const publisherMap: Record<string, string> = {
 const PublisherBooks = () => {
   const { publisher } = useParams<{ publisher: string }>();
   const [books, setBooks] = useState<Book[]>([]);
+  const [filteredBooks, setFilteredBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState<string>("all");
 
   const publisherName = publisher ? publisherMap[publisher] : "";
 
   useEffect(() => {
     fetchBooks();
   }, [publisher]);
+
+  useEffect(() => {
+    filterBooks();
+  }, [searchTerm, categoryFilter, books]);
 
   const fetchBooks = async () => {
     try {
@@ -52,6 +64,7 @@ const PublisherBooks = () => {
       if (error) throw error;
 
       setBooks(data || []);
+      setFilteredBooks(data || []);
     } catch (error: any) {
       toast.error("Failed to load books");
     } finally {
@@ -59,8 +72,29 @@ const PublisherBooks = () => {
     }
   };
 
+  const filterBooks = () => {
+    let filtered = books;
+
+    if (searchTerm) {
+      filtered = filtered.filter(
+        (book) =>
+          book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          book.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          book.description?.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    if (categoryFilter && categoryFilter !== "all") {
+      filtered = filtered.filter((book) => book.category === categoryFilter);
+    }
+
+    setFilteredBooks(filtered);
+  };
+
+  const categories = Array.from(new Set(books.map((book) => book.category).filter(Boolean)));
+
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
 
       {/* Hero Section */}
@@ -76,50 +110,102 @@ const PublisherBooks = () => {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Main Content Area */}
           <main className="lg:col-span-3">
+            {/* Search and Filter */}
+            <div className="mb-8 space-y-4">
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search by title, author, or description..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
+                <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                  <SelectTrigger className="w-full md:w-[200px]">
+                    <SelectValue placeholder="All Categories" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Categories</SelectItem>
+                    {categories.map((category) => (
+                      <SelectItem key={category} value={category!}>
+                        {category}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Showing {filteredBooks.length} of {books.length} books
+              </p>
+            </div>
+
             <article>
               <h2 className="text-3xl font-bold mb-6 text-foreground">Published Books</h2>
 
               {loading ? (
                 <p className="text-muted-foreground">Loading books...</p>
-              ) : books.length === 0 ? (
+              ) : filteredBooks.length === 0 ? (
                 <Card>
                   <CardContent className="pt-6">
-                    <p className="text-muted-foreground text-center">No books available for this publisher yet.</p>
+                    <p className="text-muted-foreground text-center">
+                      {books.length === 0
+                        ? "No books available for this publisher yet."
+                        : "No books match your search criteria."}
+                    </p>
                   </CardContent>
                 </Card>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-                  {books.map((book) => (
-                    <Card key={book.id} className="hover:shadow-lg transition-shadow">
-                      <CardHeader>
-                        <div className="flex items-start justify-between gap-2">
-                          <BookOpen className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
-                          <div className="flex-1">
-                            <CardTitle className="text-lg mb-2">{book.title}</CardTitle>
-                            <CardDescription className="flex items-center gap-2 mb-2">
-                              <User className="h-4 w-4" />
-                              {book.author}
-                            </CardDescription>
-                            {book.publication_year && (
-                              <CardDescription className="flex items-center gap-2">
-                                <Calendar className="h-4 w-4" />
-                                {book.publication_year}
-                              </CardDescription>
+                  {filteredBooks.map((book) => (
+                    <Link key={book.id} to={`/book/${book.id}`}>
+                      <Card className="hover:shadow-lg transition-all duration-300 hover:scale-[1.02] h-full cursor-pointer">
+                        <CardHeader>
+                          <div className="flex items-start gap-4">
+                            {book.thumbnail_url || book.cover_image_url ? (
+                              <img
+                                src={book.thumbnail_url || book.cover_image_url || ""}
+                                alt={book.title}
+                                className="h-24 w-16 object-cover rounded"
+                              />
+                            ) : (
+                              <div className="h-24 w-16 bg-muted rounded flex items-center justify-center flex-shrink-0">
+                                <BookOpen className="h-8 w-8 text-muted-foreground" />
+                              </div>
                             )}
+                            <div className="flex-1 min-w-0">
+                              <CardTitle className="text-lg mb-2 line-clamp-2">{book.title}</CardTitle>
+                              <CardDescription className="flex items-center gap-2 mb-2">
+                                <User className="h-4 w-4" />
+                                {book.author}
+                              </CardDescription>
+                              {book.publication_year && (
+                                <CardDescription className="flex items-center gap-2">
+                                  <Calendar className="h-4 w-4" />
+                                  {book.publication_year}
+                                </CardDescription>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      </CardHeader>
-                      <CardContent>
-                        {book.isbn && (
-                          <p className="text-sm text-muted-foreground mb-2">
-                            <strong>ISBN:</strong> {book.isbn}
-                          </p>
-                        )}
-                        {book.description && (
-                          <p className="text-sm text-muted-foreground line-clamp-3">{book.description}</p>
-                        )}
-                      </CardContent>
-                    </Card>
+                        </CardHeader>
+                        <CardContent>
+                          {book.category && (
+                            <Badge variant="secondary" className="mb-2">
+                              {book.category}
+                            </Badge>
+                          )}
+                          {book.isbn && (
+                            <p className="text-sm text-muted-foreground mb-2">
+                              <strong>ISBN:</strong> {book.isbn}
+                            </p>
+                          )}
+                          {book.description && (
+                            <p className="text-sm text-muted-foreground line-clamp-3">{book.description}</p>
+                          )}
+                        </CardContent>
+                      </Card>
+                    </Link>
                   ))}
                 </div>
               )}
@@ -130,8 +216,8 @@ const PublisherBooks = () => {
                 <Card>
                   <CardContent className="pt-6">
                     <p className="text-muted-foreground leading-relaxed">
-                      {publisherName} is a world-renowned academic publisher committed to excellence in scholarly publishing. 
-                      With a rich history of publishing groundbreaking research and educational materials, we continue to 
+                      {publisherName} is a world-renowned academic publisher committed to excellence in scholarly publishing.
+                      With a rich history of publishing groundbreaking research and educational materials, we continue to
                       support the global academic community in advancing knowledge and discovery.
                     </p>
                   </CardContent>

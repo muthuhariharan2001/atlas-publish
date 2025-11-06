@@ -17,6 +17,7 @@ export type Database = {
       books: {
         Row: {
           author: string
+          availability_status: string | null
           category: string | null
           cover_image_url: string | null
           created_at: string | null
@@ -26,14 +27,18 @@ export type Database = {
           isbn: string | null
           language: string | null
           page_count: number | null
+          price: number | null
           publication_year: number | null
           publisher: Database["public"]["Enums"]["book_publisher"]
+          subject_area: string | null
+          thumbnail_url: string | null
           title: string
           updated_at: string | null
           user_id: string
         }
         Insert: {
           author: string
+          availability_status?: string | null
           category?: string | null
           cover_image_url?: string | null
           created_at?: string | null
@@ -43,14 +48,18 @@ export type Database = {
           isbn?: string | null
           language?: string | null
           page_count?: number | null
+          price?: number | null
           publication_year?: number | null
           publisher: Database["public"]["Enums"]["book_publisher"]
+          subject_area?: string | null
+          thumbnail_url?: string | null
           title: string
           updated_at?: string | null
           user_id: string
         }
         Update: {
           author?: string
+          availability_status?: string | null
           category?: string | null
           cover_image_url?: string | null
           created_at?: string | null
@@ -60,8 +69,11 @@ export type Database = {
           isbn?: string | null
           language?: string | null
           page_count?: number | null
+          price?: number | null
           publication_year?: number | null
           publisher?: Database["public"]["Enums"]["book_publisher"]
+          subject_area?: string | null
+          thumbnail_url?: string | null
           title?: string
           updated_at?: string | null
           user_id?: string
@@ -72,15 +84,19 @@ export type Database = {
         Row: {
           access_level: string | null
           citation: string | null
+          contributor_name: string | null
           created_at: string | null
           data_type: string | null
+          dataset_url: string | null
           description: string
           doi: string | null
           file_format: string | null
           id: string
           keywords: string[] | null
+          last_updated: string | null
           license: string | null
           size_mb: number | null
+          thumbnail_url: string | null
           title: string
           updated_at: string | null
           user_id: string
@@ -89,15 +105,19 @@ export type Database = {
         Insert: {
           access_level?: string | null
           citation?: string | null
+          contributor_name?: string | null
           created_at?: string | null
           data_type?: string | null
+          dataset_url?: string | null
           description: string
           doi?: string | null
           file_format?: string | null
           id?: string
           keywords?: string[] | null
+          last_updated?: string | null
           license?: string | null
           size_mb?: number | null
+          thumbnail_url?: string | null
           title: string
           updated_at?: string | null
           user_id: string
@@ -106,15 +126,19 @@ export type Database = {
         Update: {
           access_level?: string | null
           citation?: string | null
+          contributor_name?: string | null
           created_at?: string | null
           data_type?: string | null
+          dataset_url?: string | null
           description?: string
           doi?: string | null
           file_format?: string | null
           id?: string
           keywords?: string[] | null
+          last_updated?: string | null
           license?: string | null
           size_mb?: number | null
+          thumbnail_url?: string | null
           title?: string
           updated_at?: string | null
           user_id?: string
@@ -135,8 +159,12 @@ export type Database = {
           issue: string | null
           journal_name: string
           keywords_list: string[] | null
+          open_access: boolean | null
           pages: string | null
+          peer_reviewed: boolean | null
           publication_date: string | null
+          submission_date: string | null
+          thumbnail_url: string | null
           title: string
           updated_at: string | null
           user_id: string
@@ -154,8 +182,12 @@ export type Database = {
           issue?: string | null
           journal_name: string
           keywords_list?: string[] | null
+          open_access?: boolean | null
           pages?: string | null
+          peer_reviewed?: boolean | null
           publication_date?: string | null
+          submission_date?: string | null
+          thumbnail_url?: string | null
           title: string
           updated_at?: string | null
           user_id: string
@@ -173,8 +205,12 @@ export type Database = {
           issue?: string | null
           journal_name?: string
           keywords_list?: string[] | null
+          open_access?: boolean | null
           pages?: string | null
+          peer_reviewed?: boolean | null
           publication_date?: string | null
+          submission_date?: string | null
+          thumbnail_url?: string | null
           title?: string
           updated_at?: string | null
           user_id?: string

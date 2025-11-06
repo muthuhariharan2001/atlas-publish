@@ -8,21 +8,27 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { BookOpen, TrendingUp, Users, Award } from "lucide-react";
-import booksIcon from "@/assets/books-icon.png";
+import oxfordLogo from "@/assets/oxford-logo.png";
+import cambridgeLogo from "@/assets/cambridge-logo.png";
+import springerLogo from "@/assets/springer-logo.png";
+import elsevierLogo from "@/assets/elsevier-logo.png";
+import wileyLogo from "@/assets/wiley-logo.png";
 
 interface PublisherStats {
   slug: string;
   name: string;
   totalBooks: number;
   recentBooks: number;
+  logo: string;
+  color: string;
 }
 
 const publishersList = [
-  { slug: "oxford-university-press", name: "Oxford University Press" },
-  { slug: "cambridge-university-press", name: "Cambridge University Press" },
-  { slug: "springer", name: "Springer" },
-  { slug: "elsevier", name: "Elsevier" },
-  { slug: "wiley", name: "Wiley" },
+  { slug: "oxford-university-press", name: "Oxford University Press", logo: oxfordLogo, color: "hsl(var(--oxford))" },
+  { slug: "cambridge-university-press", name: "Cambridge University Press", logo: cambridgeLogo, color: "hsl(var(--cambridge))" },
+  { slug: "springer", name: "Springer", logo: springerLogo, color: "hsl(var(--springer))" },
+  { slug: "elsevier", name: "Elsevier", logo: elsevierLogo, color: "hsl(var(--elsevier))" },
+  { slug: "wiley", name: "Wiley", logo: wileyLogo, color: "hsl(var(--wiley))" },
 ];
 
 const Publishers = () => {
@@ -54,6 +60,8 @@ const Publishers = () => {
           name: publisher.name,
           totalBooks: books?.length || 0,
           recentBooks,
+          logo: publisher.logo,
+          color: publisher.color,
         };
       });
 
@@ -94,10 +102,18 @@ const Publishers = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {stats.map((publisher) => (
                 <Link key={publisher.slug} to={`/books/${publisher.slug}`}>
-                  <Card className="hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer h-full">
+                  <Card 
+                    className="hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer h-full"
+                    style={{ borderTop: `4px solid ${publisher.color}` }}
+                  >
                     <CardHeader>
                       <div className="flex items-center gap-4 mb-4">
-                        <img src={booksIcon} alt={publisher.name} className="h-16 w-16" />
+                        <div 
+                          className="h-20 w-20 rounded-lg flex items-center justify-center p-2"
+                          style={{ backgroundColor: publisher.color }}
+                        >
+                          <img src={publisher.logo} alt={publisher.name} className="h-full w-full object-contain" />
+                        </div>
                         <div className="flex-1">
                           <CardTitle className="text-xl">{publisher.name}</CardTitle>
                           <CardDescription>Academic Publisher</CardDescription>

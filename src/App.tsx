@@ -11,6 +11,7 @@ import UploadJournal from "./pages/UploadJournal";
 import UploadDataset from "./pages/UploadDataset";
 import Publishers from "./pages/Publishers";
 import PublisherBooks from "./pages/PublisherBooks";
+import BookDetail from "./pages/BookDetail";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const App = () => (
           <Route path="/upload/dataset" element={<UploadDataset />} />
           <Route path="/publishers" element={<Publishers />} />
           <Route path="/books/:publisher" element={<PublisherBooks />} />
+          <Route path="/book/:id" element={<BookDetail />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

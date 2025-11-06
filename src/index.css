@@ -49,20 +49,25 @@ All colors MUST be HSL.
     
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
+    /* Publisher colors - light and mild */
+    --oxford: 210 100% 90%;
+    --oxford-dark: 210 100% 30%;
+    --cambridge: 142 76% 85%;
+    --cambridge-dark: 142 76% 25%;
+    --springer: 270 50% 88%;
+    --springer-dark: 270 50% 30%;
+    --elsevier: 25 95% 88%;
+    --elsevier-dark: 25 95% 35%;
+    --wiley: 174 62% 85%;
+    --wiley-dark: 174 62% 25%;
+
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
@@ -103,6 +108,19 @@ All colors MUST be HSL.
     
     --shadow-elegant: 0 10px 40px -10px hsl(217 91% 45% / 0.3);
     --shadow-glow: 0 0 60px hsl(217 91% 45% / 0.2);
+
+    /* Publisher colors for dark mode */
+    --oxford: 210 100% 25%;
+    --oxford-dark: 210 100% 75%;
+    --cambridge: 142 76% 25%;
+    --cambridge-dark: 142 76% 75%;
+    --springer: 270 50% 25%;
+    --springer-dark: 270 50% 75%;
+    --elsevier: 25 95% 30%;
+    --elsevier-dark: 25 95% 75%;
+    --wiley: 174 62% 25%;
+    --wiley-dark: 174 62% 75%;
+
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
