@@ -73,7 +73,7 @@ const Auth = () => {
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2 text-2xl font-bold text-primary mb-2">
             <BookOpen className="h-8 w-8" />
-            AcademicPress
+            Dhara Publications
           </Link>
           <p className="text-muted-foreground">Welcome to academic publishing</p>
         </div>

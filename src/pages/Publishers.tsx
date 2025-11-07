@@ -24,11 +24,11 @@ interface PublisherStats {
 }
 
 const publishersList = [
-  { slug: "oxford-university-press", name: "Oxford University Press", logo: oxfordLogo, color: "hsl(var(--oxford))" },
-  { slug: "cambridge-university-press", name: "Cambridge University Press", logo: cambridgeLogo, color: "hsl(var(--cambridge))" },
-  { slug: "springer", name: "Springer", logo: springerLogo, color: "hsl(var(--springer))" },
-  { slug: "elsevier", name: "Elsevier", logo: elsevierLogo, color: "hsl(var(--elsevier))" },
-  { slug: "wiley", name: "Wiley", logo: wileyLogo, color: "hsl(var(--wiley))" },
+  { slug: "dhara-sci-tech", name: "Dhara Sci Tech Publications", logo: oxfordLogo, color: "hsl(var(--oxford))" },
+  { slug: "yar-tech", name: "Yar Tech Publications", logo: cambridgeLogo, color: "hsl(var(--cambridge))" },
+  { slug: "am-technical", name: "AM Technical Publications", logo: springerLogo, color: "hsl(var(--springer))" },
+  { slug: "dhara-publications", name: "Dhara Publications", logo: elsevierLogo, color: "hsl(var(--elsevier))" },
+  { slug: "as-nextgen", name: "AS NextGen Publishing Home", logo: wileyLogo, color: "hsl(var(--wiley))" },
 ];
 
 const Publishers = () => {

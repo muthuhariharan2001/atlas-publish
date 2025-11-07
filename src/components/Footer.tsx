@@ -9,10 +9,13 @@ export const Footer = () => {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <BookOpen className="h-6 w-6 text-primary" />
-              <span className="text-xl font-bold text-primary">AcademicPress</span>
+              <span className="text-xl font-bold text-primary">
+                Dhara Publications
+              </span>
             </div>
             <p className="text-muted-foreground text-sm">
-              Leading platform for academic publishing, research dissemination, and scholarly communication.
+              Leading platform for academic publishing, research dissemination,
+              and scholarly communication.
             </p>
           </div>
 
@@ -20,28 +23,43 @@ export const Footer = () => {
             <h3 className="font-semibold mb-4 text-foreground">Publishers</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link to="/books/oxford-university-press" className="text-muted-foreground hover:text-primary transition-colors">
-                  Oxford University Press
+                <Link
+                  to="/books/dhara-sci-tech"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Dhara Sci Tech Publications
                 </Link>
               </li>
               <li>
-                <Link to="/books/cambridge-university-press" className="text-muted-foreground hover:text-primary transition-colors">
-                  Cambridge University Press
+                <Link
+                  to="/books/yar-tech"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Yar Tech Publications
                 </Link>
               </li>
               <li>
-                <Link to="/books/springer" className="text-muted-foreground hover:text-primary transition-colors">
-                  Springer
+                <Link
+                  to="/books/am-technical"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
+                  AM Technical Publications
                 </Link>
               </li>
               <li>
-                <Link to="/books/elsevier" className="text-muted-foreground hover:text-primary transition-colors">
-                  Elsevier
+                <Link
+                  to="/books/dhara-publications"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Dhara Publications
                 </Link>
               </li>
               <li>
-                <Link to="/books/wiley" className="text-muted-foreground hover:text-primary transition-colors">
-                  Wiley
+                <Link
+                  to="/books/as-nextgen"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
+                  AS NextGen Publishing Home
                 </Link>
               </li>
             </ul>
@@ -61,19 +79,25 @@ export const Footer = () => {
             <h3 className="font-semibold mb-4 text-foreground">Contact</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li className="flex items-center gap-2">
-                <Mail className="h-4 w-4" />
-                contact@academicpress.com
+                <a
+                  href="mailto:contact@dhara-publications.com"
+                  className="flex items-center gap-2 text-sm hover:text-primary transition-colors"
+                >
+                  <Mail className="h-4 w-4" />
+                  contact@dhara-publications.com
+                </a>
               </li>
+
               <li className="flex items-center gap-2">
                 <MapPin className="h-4 w-4" />
-                London, United Kingdom
+                Chennai - TamilNadu
               </li>
             </ul>
           </div>
         </div>
 
         <div className="border-t mt-8 pt-8 text-center text-sm text-muted-foreground">
-          <p>&copy; 2025 AcademicPress. All rights reserved.</p>
+          <p>&copy; 2025 Dhara Publications. All rights reserved.</p>
         </div>
       </div>
     </footer>

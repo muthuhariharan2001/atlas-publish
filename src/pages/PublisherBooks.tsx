@@ -2,14 +2,32 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { BookOpen, Calendar, User, Search } from "lucide-react";
+import { publishersList } from "@/data/publishersList";
 
 interface Book {
   id: string;
@@ -26,11 +44,11 @@ interface Book {
 }
 
 const publisherMap: Record<string, string> = {
-  "oxford-university-press": "Oxford University Press",
-  "cambridge-university-press": "Cambridge University Press",
-  "springer": "Springer",
-  "elsevier": "Elsevier",
-  "wiley": "Wiley",
+  "dhara-sci-tech": "Dhara Sci Tech Publications",
+  "yar-tech": "Yar Tech Publications",
+  "as-nextgen": "AS NextGen Publications",
+  "dhara-publications": "Dhara Publications",
+  "am-technical": "AM Technical Publications",
 };
 
 const PublisherBooks = () => {
@@ -42,6 +60,8 @@ const PublisherBooks = () => {
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
 
   const publisherName = publisher ? publisherMap[publisher] : "";
+  const publisherInfo = publishersList.find((p) => p.slug === publisher);
+  const primaryColor = publisherInfo?.color || "hsl(var(--primary))";
 
   useEffect(() => {
     fetchBooks();
@@ -91,17 +111,29 @@ const PublisherBooks = () => {
     setFilteredBooks(filtered);
   };
 
-  const categories = Array.from(new Set(books.map((book) => book.category).filter(Boolean)));
+  const categories = Array.from(
+    new Set(books.map((book) => book.category).filter(Boolean))
+  );
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-primary to-primary-glow text-primary-foreground py-16">
+      <section
+        className="py-16 text-foreground mb-12"
+        
+        style={{
+          background: `${primaryColor}`, // softer end
+        }}
+      >
         <div className="container mx-auto px-4">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">{publisherName}</h1>
-          <p className="text-xl opacity-90">Explore our collection of academic publications</p>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            {publisherName}
+          </h1>
+          <p className="text-xl opacity-90">
+            Explore our collection of academic publications
+          </p>
         </div>
       </section>
 
@@ -122,7 +154,10 @@ const PublisherBooks = () => {
                     className="pl-10"
                   />
                 </div>
-                <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                <Select
+                  value={categoryFilter}
+                  onValueChange={setCategoryFilter}
+                >
                   <SelectTrigger className="w-full md:w-[200px]">
                     <SelectValue placeholder="All Categories" />
                   </SelectTrigger>
@@ -142,7 +177,9 @@ const PublisherBooks = () => {
             </div>
 
             <article>
-              <h2 className="text-3xl font-bold mb-6 text-foreground">Published Books</h2>
+              <h2 className="text-3xl font-bold mb-6 text-foreground">
+                Published Books
+              </h2>
 
               {loading ? (
                 <p className="text-muted-foreground">Loading books...</p>
@@ -165,7 +202,11 @@ const PublisherBooks = () => {
                           <div className="flex items-start gap-4">
                             {book.thumbnail_url || book.cover_image_url ? (
                               <img
-                                src={book.thumbnail_url || book.cover_image_url || ""}
+                                src={
+                                  book.thumbnail_url ||
+                                  book.cover_image_url ||
+                                  ""
+                                }
                                 alt={book.title}
                                 className="h-24 w-16 object-cover rounded"
                               />
@@ -175,7 +216,9 @@ const PublisherBooks = () => {
                               </div>
                             )}
                             <div className="flex-1 min-w-0">
-                              <CardTitle className="text-lg mb-2 line-clamp-2">{book.title}</CardTitle>
+                              <CardTitle className="text-lg mb-2 line-clamp-2">
+                                {book.title}
+                              </CardTitle>
                               <CardDescription className="flex items-center gap-2 mb-2">
                                 <User className="h-4 w-4" />
                                 {book.author}
@@ -191,7 +234,14 @@ const PublisherBooks = () => {
                         </CardHeader>
                         <CardContent>
                           {book.category && (
-                            <Badge variant="secondary" className="mb-2">
+                            <Badge
+                              style={{
+                                backgroundColor: primaryColor,
+                                color: "#fff",
+                              }}
+                              variant="secondary"
+                              className="mb-2"
+                            >
                               {book.category}
                             </Badge>
                           )}
@@ -201,7 +251,9 @@ const PublisherBooks = () => {
                             </p>
                           )}
                           {book.description && (
-                            <p className="text-sm text-muted-foreground line-clamp-3">{book.description}</p>
+                            <p className="text-sm text-muted-foreground line-clamp-3">
+                              {book.description}
+                            </p>
                           )}
                         </CardContent>
                       </Card>
@@ -212,13 +264,17 @@ const PublisherBooks = () => {
 
               {/* About Section */}
               <section className="mb-12">
-                <h3 className="text-2xl font-bold mb-4 text-foreground">About {publisherName}</h3>
+                <h3 className="text-2xl font-bold mb-4 text-foreground">
+                  About {publisherName}
+                </h3>
                 <Card>
                   <CardContent className="pt-6">
                     <p className="text-muted-foreground leading-relaxed">
-                      {publisherName} is a world-renowned academic publisher committed to excellence in scholarly publishing.
-                      With a rich history of publishing groundbreaking research and educational materials, we continue to
-                      support the global academic community in advancing knowledge and discovery.
+                      {publisherName} is a world-renowned academic publisher
+                      committed to excellence in scholarly publishing. With a
+                      rich history of publishing groundbreaking research and
+                      educational materials, we continue to support the global
+                      academic community in advancing knowledge and discovery.
                     </p>
                   </CardContent>
                 </Card>
@@ -226,35 +282,51 @@ const PublisherBooks = () => {
 
               {/* FAQ Section */}
               <section>
-                <h3 className="text-2xl font-bold mb-4 text-foreground">Frequently Asked Questions</h3>
+                <h3 className="text-2xl font-bold mb-4 text-foreground">
+                  Frequently Asked Questions
+                </h3>
                 <Accordion type="single" collapsible className="w-full">
                   <AccordionItem value="item-1">
-                    <AccordionTrigger>How do I submit my book for publication?</AccordionTrigger>
+                    <AccordionTrigger>
+                      How do I submit my book for publication?
+                    </AccordionTrigger>
                     <AccordionContent>
-                      To submit your book, you need to create an account and use our upload form. Navigate to the Dashboard
-                      and select "Upload Book" to get started. Make sure to provide all required information including title,
-                      author details, and a comprehensive description.
+                      To submit your book, you need to create an account and use
+                      our upload form. Navigate to the Dashboard and select
+                      "Upload Book" to get started. Make sure to provide all
+                      required information including title, author details, and
+                      a comprehensive description.
                     </AccordionContent>
                   </AccordionItem>
                   <AccordionItem value="item-2">
-                    <AccordionTrigger>What formats do you accept?</AccordionTrigger>
+                    <AccordionTrigger>
+                      What formats do you accept?
+                    </AccordionTrigger>
                     <AccordionContent>
-                      We accept manuscripts in various formats including PDF, DOCX, and LaTeX. All submissions undergo
-                      a review process to ensure they meet our quality standards.
+                      We accept manuscripts in various formats including PDF,
+                      DOCX, and LaTeX. All submissions undergo a review process
+                      to ensure they meet our quality standards.
                     </AccordionContent>
                   </AccordionItem>
                   <AccordionItem value="item-3">
-                    <AccordionTrigger>How long does the review process take?</AccordionTrigger>
+                    <AccordionTrigger>
+                      How long does the review process take?
+                    </AccordionTrigger>
                     <AccordionContent>
-                      The review process typically takes 4-8 weeks depending on the complexity of the work and the
-                      availability of reviewers. You will receive regular updates throughout the process.
+                      The review process typically takes 4-8 weeks depending on
+                      the complexity of the work and the availability of
+                      reviewers. You will receive regular updates throughout the
+                      process.
                     </AccordionContent>
                   </AccordionItem>
                   <AccordionItem value="item-4">
-                    <AccordionTrigger>What are the publication fees?</AccordionTrigger>
+                    <AccordionTrigger>
+                      What are the publication fees?
+                    </AccordionTrigger>
                     <AccordionContent>
-                      Publication fees vary depending on the type and length of the work. Please contact our editorial
-                      team for detailed information about fees and payment options.
+                      Publication fees vary depending on the type and length of
+                      the work. Please contact our editorial team for detailed
+                      information about fees and payment options.
                     </AccordionContent>
                   </AccordionItem>
                 </Accordion>
@@ -272,22 +344,38 @@ const PublisherBooks = () => {
                 <CardContent>
                   <ul className="space-y-2">
                     <li>
-                      <a href="#" className="text-primary hover:underline text-sm">
+                      <a
+                        href="#"
+                        style={{ color: primaryColor }}
+                        className="text-primary hover:underline text-sm"
+                      >
                         Submission Guidelines
                       </a>
                     </li>
                     <li>
-                      <a href="#" className="text-primary hover:underline text-sm">
+                      <a
+                        href="#"
+                        style={{ color: primaryColor }}
+                        className="text-primary hover:underline text-sm"
+                      >
                         Author Resources
                       </a>
                     </li>
                     <li>
-                      <a href="#" className="text-primary hover:underline text-sm">
+                      <a
+                        href="#"
+                        style={{ color: primaryColor }}
+                        className="text-primary hover:underline text-sm"
+                      >
                         Editorial Board
                       </a>
                     </li>
                     <li>
-                      <a href="#" className="text-primary hover:underline text-sm">
+                      <a
+                        href="#"
+                        style={{ color: primaryColor }}
+                        className="text-primary hover:underline text-sm"
+                      >
                         Contact Us
                       </a>
                     </li>
@@ -302,34 +390,50 @@ const PublisherBooks = () => {
                 <CardContent>
                   <div className="space-y-3">
                     <div>
-                      <p className="text-sm text-muted-foreground">Total Books</p>
-                      <p className="text-2xl font-bold text-primary">{books.length}</p>
+                      <p className="text-sm text-muted-foreground">
+                        Total Books
+                      </p>
+                      <p
+                        className="text-2xl font-bold"
+                        style={{ color: primaryColor }}
+                      >
+                        {books.length}
+                      </p>
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground">Recent Publications</p>
+                      <p className="text-sm text-muted-foreground">
+                        Recent Publications
+                      </p>
                       <p className="text-2xl font-bold text-primary">
-                        {books.filter((b) => {
-                          const bookDate = new Date(b.created_at);
-                          const monthAgo = new Date();
-                          monthAgo.setMonth(monthAgo.getMonth() - 1);
-                          return bookDate > monthAgo;
-                        }).length}
+                        {
+                          books.filter((b) => {
+                            const bookDate = new Date(b.created_at);
+                            const monthAgo = new Date();
+                            monthAgo.setMonth(monthAgo.getMonth() - 1);
+                            return bookDate > monthAgo;
+                          }).length
+                        }
                       </p>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="bg-primary text-primary-foreground">
+              <Card
+                className="text-primary-foreground"
+                style={{ backgroundColor: primaryColor }}
+              >
                 <CardHeader>
                   <CardTitle className="text-lg">Submit Your Work</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm opacity-90 mb-4">
-                    Ready to publish with {publisherName}? Start your submission today.
+                    Ready to publish with {publisherName}? Start your submission
+                    today.
                   </p>
                   <a
                     href="/dashboard"
+                    style={{ color: primaryColor }}
                     className="inline-block bg-secondary text-secondary-foreground px-4 py-2 rounded-md font-medium hover:opacity-90 transition-opacity text-sm"
                   >
                     Go to Dashboard

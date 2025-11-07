@@ -14,11 +14,11 @@ import { toast } from "sonner";
 import { User } from "@supabase/supabase-js";
 
 const publishers = [
-  "Oxford University Press",
-  "Cambridge University Press",
-  "Springer",
-  "Elsevier",
-  "Wiley",
+  "Dhara Sci Tech Publications",
+  "Yar Tech Publications",
+  "AM Technical Publications",
+  "Dhara Publications",
+  "AS NextGen Publishing Home",
 ];
 
 const UploadBook = () => {

@@ -73,10 +73,10 @@ const Index = () => {
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2 text-muted-foreground text-sm">
-                  <li>• Oxford University Press</li>
-                  <li>• Cambridge University Press</li>
-                  <li>• Springer, Elsevier, Wiley</li>
-                  <li>• Professional editorial support</li>
+                  <li>• Dhara Publications</li>
+                  <li>• Yar Tech Publications</li>
+                  <li>• AM Technical Publications</li>
+                  <li>• AS NextGen Publishing Home</li>
                 </ul>
               </CardContent>
             </Card>
@@ -136,16 +136,16 @@ const Index = () => {
           <Carousel className="w-full max-w-5xl mx-auto">
             <CarouselContent>
               {[
-                { name: "Oxford University Press", focus: "Humanities & Sciences" },
-                { name: "Cambridge University Press", focus: "Research & Education" },
-                { name: "Springer", focus: "Science & Technology" },
-                { name: "Elsevier", focus: "Medical & Scientific" },
-                { name: "Wiley", focus: "Professional & Academic" },
+                { name: "Dhara Sci Tech Publications", focus: "Science & Technology" },
+                { name: "Yar Tech Publications", focus: "Research & Education" },
+                { name: "AS NextGen Publishing Home", focus: " Sciences" },
+                { name: "Dhara Publications", focus: "Scientific" },
+                { name: "AM Technical Publications", focus: "Academic" },
               ].map((publisher, index) => (
                 <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
                   <Card className="h-full">
                     <CardHeader>
-                      <img src={booksIcon} alt={publisher.name} className="h-16 w-16 mx-auto mb-3" />
+                      <img src={booksIcon} alt={publisher.name} className="h-16 w-16 mx-auto mb-3 rounded-[8px]" />
                       <CardTitle className="text-lg text-center">{publisher.name}</CardTitle>
                       <CardDescription className="text-center">
                         <Badge variant="secondary">{publisher.focus}</Badge>

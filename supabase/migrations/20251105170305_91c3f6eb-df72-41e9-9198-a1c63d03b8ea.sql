@@ -1,10 +1,10 @@
 -- Create enum for book publishers
 CREATE TYPE public.book_publisher AS ENUM (
-  'Oxford University Press',
-  'Cambridge University Press',
-  'Springer',
-  'Elsevier',
-  'Wiley'
+  'Dhara Sci Tech Publications',
+  'Yar Tech Publications',
+  'AM Technical Publications',
+  'Dhara Publications',
+  'AS NextGen Publishing Home'
 );
 
 -- Create profiles table for user data
