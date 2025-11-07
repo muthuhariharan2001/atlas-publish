@@ -256,6 +256,11 @@ export type Database = {
         | "Springer"
         | "Elsevier"
         | "Wiley"
+        | "Dhara Sci Tech Publications"
+        | "Yar Tech Publications"
+        | "AM Technical Publications"
+        | "Dhara Publications"
+        | "AS NextGen Publishing Home"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -389,6 +394,11 @@ export const Constants = {
         "Springer",
         "Elsevier",
         "Wiley",
+        "Dhara Sci Tech Publications",
+        "Yar Tech Publications",
+        "AM Technical Publications",
+        "Dhara Publications",
+        "AS NextGen Publishing Home",
       ],
     },
   },
