@@ -4,7 +4,7 @@ import { BookOpen, User, LogOut } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect, useState } from "react";
 import { User as SupabaseUser } from "@supabase/supabase-js";
-import { ThemeToggle } from "@/components/ThemeToggle";
+// import { ThemeToggle } from "@/components/ThemeToggle";
 
 export const Navbar = () => {
   const navigate = useNavigate();
@@ -46,7 +46,7 @@ export const Navbar = () => {
               <Link to="/dashboard" className="text-foreground hover:text-primary transition-colors">
                 Dashboard
               </Link>
-              <ThemeToggle />
+              {/* <ThemeToggle /> */}
               <Button onClick={handleLogout} variant="ghost" size="sm">
                 <LogOut className="h-4 w-4 mr-2" />
                 Logout
@@ -54,7 +54,7 @@ export const Navbar = () => {
             </>
           ) : (
             <>
-              <ThemeToggle />
+              {/* <ThemeToggle /> */}
               <Link to="/auth">
                 <Button variant="default" size="sm">
                   <User className="h-4 w-4 mr-2" />

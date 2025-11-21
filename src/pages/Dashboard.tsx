@@ -104,7 +104,7 @@ const Dashboard = () => {
         <div className="mt-12">
           <h2 className="text-2xl font-bold mb-6 text-foreground">Quick Links</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Link to="/books/oxford-university-press">
+            <Link to="/publishers">
               <Card className="hover:bg-accent cursor-pointer transition-colors">
                 <CardContent className="pt-6">
                   <h3 className="font-semibold text-foreground">Browse Publishers</h3>

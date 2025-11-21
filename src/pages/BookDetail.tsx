@@ -3,11 +3,18 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { ArrowLeft, BookOpen, Calendar, Globe, User } from "lucide-react";
+import { log } from "console";
 
 interface Book {
   id: string;
@@ -33,7 +40,6 @@ const BookDetail = () => {
   const navigate = useNavigate();
   const [book, setBook] = useState<Book | null>(null);
   const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     fetchBook();
   }, [id]);
@@ -48,6 +54,7 @@ const BookDetail = () => {
 
       if (error) throw error;
       setBook(data);
+      console.log("Book ID from params:", data.cover_image_url);
     } catch (error: any) {
       toast.error("Failed to load book details");
       console.error(error);
@@ -85,11 +92,7 @@ const BookDetail = () => {
       <Navbar />
 
       <div className="flex-1 container mx-auto px-4 py-12">
-        <Button
-          variant="ghost"
-          onClick={() => navigate(-1)}
-          className="mb-6"
-        >
+        <Button variant="ghost" onClick={() => navigate(-1)} className="mb-6">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back
         </Button>
@@ -111,8 +114,17 @@ const BookDetail = () => {
                 )}
                 {book.price && (
                   <div className="text-center mb-4">
-                    <p className="text-3xl font-bold text-primary">${book.price}</p>
-                    <Badge variant={book.availability_status === "Available" ? "default" : "secondary"} className="mt-2">
+                    <p className="text-3xl font-bold text-primary">
+                      ${book.price}
+                    </p>
+                    <Badge
+                      variant={
+                        book.availability_status === "Available"
+                          ? "default"
+                          : "secondary"
+                      }
+                      className="mt-2"
+                    >
                       {book.availability_status || "Available"}
                     </Badge>
                   </div>
@@ -126,7 +138,9 @@ const BookDetail = () => {
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div>
-                    <CardTitle className="text-3xl mb-2">{book.title}</CardTitle>
+                    <CardTitle className="text-3xl mb-2">
+                      {book.title}
+                    </CardTitle>
                     <CardDescription className="text-lg">
                       <User className="inline h-4 w-4 mr-1" />
                       by {book.author}
@@ -147,12 +161,16 @@ const BookDetail = () => {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <h4 className="font-semibold text-sm text-muted-foreground mb-1">Publisher</h4>
+                    <h4 className="font-semibold text-sm text-muted-foreground mb-1">
+                      Publisher
+                    </h4>
                     <p>{book.publisher}</p>
                   </div>
                   {book.isbn && (
                     <div>
-                      <h4 className="font-semibold text-sm text-muted-foreground mb-1">ISBN</h4>
+                      <h4 className="font-semibold text-sm text-muted-foreground mb-1">
+                        ISBN
+                      </h4>
                       <p className="font-mono text-sm">{book.isbn}</p>
                     </div>
                   )}
@@ -167,7 +185,9 @@ const BookDetail = () => {
                   )}
                   {book.edition && (
                     <div>
-                      <h4 className="font-semibold text-sm text-muted-foreground mb-1">Edition</h4>
+                      <h4 className="font-semibold text-sm text-muted-foreground mb-1">
+                        Edition
+                      </h4>
                       <p>{book.edition}</p>
                     </div>
                   )}
@@ -182,13 +202,17 @@ const BookDetail = () => {
                   )}
                   {book.page_count && (
                     <div>
-                      <h4 className="font-semibold text-sm text-muted-foreground mb-1">Pages</h4>
+                      <h4 className="font-semibold text-sm text-muted-foreground mb-1">
+                        Pages
+                      </h4>
                       <p>{book.page_count}</p>
                     </div>
                   )}
                   {book.subject_area && (
                     <div>
-                      <h4 className="font-semibold text-sm text-muted-foreground mb-1">Subject Area</h4>
+                      <h4 className="font-semibold text-sm text-muted-foreground mb-1">
+                        Subject Area
+                      </h4>
                       <p>{book.subject_area}</p>
                     </div>
                   )}

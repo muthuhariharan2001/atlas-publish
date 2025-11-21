@@ -5,14 +5,19 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Badge } from "@/components/ui/badge";
-import { BookOpen, FileText, Database, ArrowRight, Users, Award, TrendingUp } from "lucide-react";
+import { BookOpen, FileText, Database, ArrowRight, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import heroBackground from "@/assets/hero-background.jpg";
 import booksIcon from "@/assets/books-icon.png";
 import journalsIcon from "@/assets/journals-icon.png";
 import datasetsIcon from "@/assets/datasets-icon.png";
+// import { supabase } from "@/lib/supabaseClient";
+import React from "react";
+import {supabase } from "@/integrations/supabase/client";
+
 
 const Index = () => {
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />

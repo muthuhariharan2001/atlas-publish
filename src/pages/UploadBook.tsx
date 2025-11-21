@@ -117,7 +117,7 @@ const UploadBook = () => {
       ]);
 
       if (error) throw error;
-
+      console.log(formData);
       toast.success("Book uploaded successfully!");
       navigate("/dashboard");
     } catch (error: any) {
