@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import {
@@ -26,7 +26,14 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { BookOpen, Calendar, User, Search } from "lucide-react";
+import {
+  BookOpen,
+  Calendar,
+  User,
+  Search,
+  Edit2,
+  Trash2,
+} from "lucide-react";
 import { publishersList } from "@/data/publishersList";
 
 interface Book {
@@ -53,54 +60,64 @@ const publisherMap: Record<string, string> = {
 
 const PublisherBooks = () => {
   const { publisher } = useParams<{ publisher: string }>();
+  const navigate = useNavigate();
+
   const [books, setBooks] = useState<Book[]>([]);
   const [filteredBooks, setFilteredBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
+  const [user, setUser] = useState<any>(null);
 
   const publisherName = publisher ? publisherMap[publisher] : "";
   const publisherInfo = publishersList.find((p) => p.slug === publisher);
   const primaryColor = publisherInfo?.color || "hsl(var(--primary))";
 
   useEffect(() => {
-    fetchBooks();
-  }, [publisher]);
+    const getUser = async () => {
+      const { data } = await supabase.auth.getUser();
+      setUser(data.user ?? null);
+    };
+    getUser();
+  }, []);
 
   useEffect(() => {
-    filterBooks();
-  }, [searchTerm, categoryFilter, books]);
+    const fetchBooks = async () => {
+      try {
+        if (!publisherName) return;
 
-  const fetchBooks = async () => {
-    try {
-      if (!publisherName) return;
+        setLoading(true);
 
-      const { data, error } = await supabase
-        .from("books")
-        .select("*")
-        .eq("publisher", publisherName as any)
-        .order("created_at", { ascending: false });
+        const { data, error } = await supabase
+          .from("books")
+          .select("*")
+          .eq("publisher", publisherName as any)
+          .order("created_at", { ascending: false });
 
-      if (error) throw error;
+        if (error) throw error;
 
-      setBooks(data || []);
-      setFilteredBooks(data || []);
-    } catch (error: any) {
-      toast.error("Failed to load books");
-    } finally {
-      setLoading(false);
-    }
-  };
+        setBooks(data || []);
+        setFilteredBooks(data || []);
+      } catch {
+        toast.error("Failed to load books");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const filterBooks = () => {
+    fetchBooks();
+  }, [publisher, publisherName]);
+
+  useEffect(() => {
     let filtered = books;
 
     if (searchTerm) {
+      const term = searchTerm.toLowerCase();
       filtered = filtered.filter(
         (book) =>
-          book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          book.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          book.description?.toLowerCase().includes(searchTerm.toLowerCase())
+          book.title.toLowerCase().includes(term) ||
+          book.author.toLowerCase().includes(term) ||
+          book.description?.toLowerCase().includes(term)
       );
     }
 
@@ -109,12 +126,43 @@ const PublisherBooks = () => {
     }
 
     setFilteredBooks(filtered);
-  };
+  }, [searchTerm, categoryFilter, books]);
 
   const categories = Array.from(
     new Set(books.map((book) => book.category).filter(Boolean))
   );
 
+  // ✅ EDIT: pass book and publisher slug
+  const handleEdit = (book: Book) => {
+    console.log("Navigating to edit with book:", book);
+    navigate("/upload/book", {
+      state: { mode: "edit", book, slug: publisher },
+    });
+  };
+
+  // ✅ DELETE: works as before
+  const handleDelete = async (book: Book) => {
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${book.title}"?`
+    );
+    if (!confirmed) return;
+
+    try {
+      const { error } = await supabase
+        .from("books")
+        .delete()
+        .eq("id", book.id);
+
+      if (error) throw error;
+
+      setBooks((prev) => prev.filter((b) => b.id !== book.id));
+      setFilteredBooks((prev) => prev.filter((b) => b.id !== book.id));
+      toast.success("Book deleted successfully");
+    } catch {
+      toast.error("Failed to delete book");
+    }
+  };
+  
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
@@ -122,10 +170,7 @@ const PublisherBooks = () => {
       {/* Hero Section */}
       <section
         className="py-16 text-foreground mb-12"
-        
-        style={{
-          background: `${primaryColor}`, // softer end
-        }}
+        style={{ background: primaryColor }}
       >
         <div className="container mx-auto px-4">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
@@ -231,6 +276,33 @@ const PublisherBooks = () => {
                               )}
                             </div>
                           </div>
+
+                          {user && (
+                            <div className="flex gap-2 justify-end mt-2">
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  handleEdit(book);
+                                }}
+                                className="p-1 rounded hover:bg-muted"
+                                title="Edit book"
+                              >
+                                <Edit2 className="h-4 w-4" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  handleDelete(book);
+                                }}
+                                className="p-1 rounded hover:bg-destructive/10 text-destructive"
+                                title="Delete book"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </button>
+                            </div>
+                          )}
                         </CardHeader>
                         <CardContent>
                           {book.category && (
@@ -271,10 +343,7 @@ const PublisherBooks = () => {
                   <CardContent className="pt-6">
                     <p className="text-muted-foreground leading-relaxed">
                       {publisherName} is a world-renowned academic publisher
-                      committed to excellence in scholarly publishing. With a
-                      rich history of publishing groundbreaking research and
-                      educational materials, we continue to support the global
-                      academic community in advancing knowledge and discovery.
+                      committed to excellence in scholarly publishing.
                     </p>
                   </CardContent>
                 </Card>
@@ -291,11 +360,8 @@ const PublisherBooks = () => {
                       How do I submit my book for publication?
                     </AccordionTrigger>
                     <AccordionContent>
-                      To submit your book, you need to create an account and use
-                      our upload form. Navigate to the Dashboard and select
-                      "Upload Book" to get started. Make sure to provide all
-                      required information including title, author details, and
-                      a comprehensive description.
+                      To submit your book, create an account and use the upload
+                      form in the Dashboard.
                     </AccordionContent>
                   </AccordionItem>
                   <AccordionItem value="item-2">
@@ -303,9 +369,8 @@ const PublisherBooks = () => {
                       What formats do you accept?
                     </AccordionTrigger>
                     <AccordionContent>
-                      We accept manuscripts in various formats including PDF,
-                      DOCX, and LaTeX. All submissions undergo a review process
-                      to ensure they meet our quality standards.
+                      We accept PDF, DOCX, and LaTeX manuscripts, which are
+                      reviewed for quality.
                     </AccordionContent>
                   </AccordionItem>
                   <AccordionItem value="item-3">
@@ -313,10 +378,8 @@ const PublisherBooks = () => {
                       How long does the review process take?
                     </AccordionTrigger>
                     <AccordionContent>
-                      The review process typically takes 4-8 weeks depending on
-                      the complexity of the work and the availability of
-                      reviewers. You will receive regular updates throughout the
-                      process.
+                      The review process typically takes 4‑8 weeks depending on
+                      complexity and reviewer availability.
                     </AccordionContent>
                   </AccordionItem>
                   <AccordionItem value="item-4">
@@ -324,9 +387,8 @@ const PublisherBooks = () => {
                       What are the publication fees?
                     </AccordionTrigger>
                     <AccordionContent>
-                      Publication fees vary depending on the type and length of
-                      the work. Please contact our editorial team for detailed
-                      information about fees and payment options.
+                      Fees vary by type and length of work; contact the
+                      editorial team for detailed information.
                     </AccordionContent>
                   </AccordionItem>
                 </Accordion>

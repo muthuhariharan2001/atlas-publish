@@ -115,7 +115,7 @@ const BookDetail = () => {
                 {book.price && (
                   <div className="text-center mb-4">
                     <p className="text-3xl font-bold text-primary">
-                      ${book.price}
+                      {book.price} Rs
                     </p>
                     <Badge
                       variant={

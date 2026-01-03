@@ -57,17 +57,21 @@ All colors MUST be HSL.
 
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-    /* Publisher colors - light and mild */
-    --oxford: 210 100% 90%;
-    --oxford-dark: 210 100% 30%;
-    --cambridge: 142 76% 85%;
-    --cambridge-dark: 142 76% 25%;
-    --springer: 270 50% 88%;
-    --springer-dark: 270 50% 30%;
-    --elsevier: 25 95% 88%;
-    --elsevier-dark: 25 95% 35%;
-    --wiley: 174 62% 85%;
-    --wiley-dark: 174 62% 25%;
+    /* Publisher colors tuned for white backgrounds */
+    --oxford: 210 60% 30%;
+    --oxford-dark: 210 60% 70%;
+
+    --cambridge: 142 55% 28%;
+    --cambridge-dark: 142 55% 68%;
+
+    --springer: 270 45% 30%;
+    --springer-dark: 270 45% 70%;
+
+    --elsevier: 25 75% 32%;
+    --elsevier-dark: 25 75% 70%;
+
+    --wiley: 174 55% 30%;
+    --wiley-dark: 174 55% 70%;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -125,17 +129,21 @@ All colors MUST be HSL.
     --shadow-elegant: 0 10px 40px -10px hsl(217 91% 45% / 0.3);
     --shadow-glow: 0 0 60px hsl(217 91% 45% / 0.2);
 
-    /* Publisher colors for dark mode */
-    --oxford: 210 40% 22%;         /* Deep blue */
-    --oxford-dark: 210 40% 70%;    /* Lighter blue for highlights */
-    --cambridge: 142 40% 22%;      /* Deep green */
-    --cambridge-dark: 142 40% 70%; /* Lighter green for highlights */
-    --springer: 270 30% 22%;       /* Deep purple */
-    --springer-dark: 270 30% 70%;  /* Lighter purple for highlights */
-    --elsevier: 25 60% 22%;        /* Deep orange */
-    --elsevier-dark: 25 60% 70%;   /* Lighter orange for highlights */
-    --wiley: 174 40% 22%;          /* Deep teal */
-    --wiley-dark: 174 40% 70%;  /* Light teal for contrast */
+    /* Publisher colors tuned for white backgrounds */
+    --oxford: 210 60% 30%;
+    --oxford-dark: 210 60% 70%;
+
+    --cambridge: 142 55% 28%;
+    --cambridge-dark: 142 55% 68%;
+
+    --springer: 270 45% 30%;
+    --springer-dark: 270 45% 70%;
+
+    --elsevier: 25 75% 32%;
+    --elsevier-dark: 25 75% 70%;
+
+    --wiley: 174 55% 30%;
+    --wiley-dark: 174 55% 70%;
 
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
